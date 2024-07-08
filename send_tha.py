@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 
 class THARpcClient:
     def __init__(self, rpc_user, rpc_password, wallet_path, rpc_host='127.0.0.1', rpc_port=18332):
@@ -19,18 +20,23 @@ class THARpcClient:
         return self.call('sendtoaddress', [address, amount])
 
 if __name__ == '__main__':
-    rpc_user = 'username_here'
-    rpc_password = 'password_here'
-    wallet_path = 'SEND'  # This should be adjusted if the wallet name is different or needs special handling.
-    recipient_address = 'enter_RECEIVE_wallet_address_here'
+    rpc_user = 'enter_user'
+    rpc_password = 'x'
+    wallet_path = 'SEND'
+    recipient_address = 'enter_RECEIVE_address_here'
     amount = 0.1
+    total_transactions = 500
+    total_time = 600  # Total time in seconds for 10 minutes
+
+    interval_seconds = total_time / total_transactions  # Interval between transactions
 
     client = THARpcClient(rpc_user, rpc_password, wallet_path)
 
     try:
-        # Send 0.1 THA to the recipient address
-        txid = client.send_to_address(recipient_address, amount)
-        print(f"Transaction ID: {txid}")
-
+        for _ in range(total_transactions):
+            txid = client.send_to_address(recipient_address, amount)
+            print(f"Transaction ID: {txid}")
+            time.sleep(interval_seconds)  # Pause execution for the calculated number of seconds
     except Exception as e:
         print(f"An error occurred: {e}")
+
